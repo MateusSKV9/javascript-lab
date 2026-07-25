@@ -6,7 +6,7 @@ console.log("5" - 2); // 3 (Subtração força conversão de "5" para number)
 console.log("5" * "2"); // 10 (Multiplicação força conversão)
 console.log("cinco" * 2); // NaN (Operação matemática inválida)
 
-//
+// ——————————————————————————————————————
 
 // Exposição das loucuras do == :
 console.log(0 == ""); // true (0 e string vazia viram boolean false)
@@ -15,27 +15,27 @@ console.log(false == "0"); // true
 console.log(null == undefined); // true
 console.log([] == false); // true
 
-//
+// ——————————————————————————————————————
 
 console.log(0 === ""); // false (number !== string)
 console.log(0 === "0"); // false
 console.log(null === undefined); // false
 console.log(10 === 10); // true
 
-//
+// ——————————————————————————————————————
 
 console.log(0 === ""); // false (number !== string)
 console.log(0 === "0"); // false
 console.log(null === undefined); // false
 console.log(10 === 10); // true
 
-//
+// ——————————————————————————————————————
 
 console.log("Tema Escuro" || "Tema Claro"); // "Tema Escuro" (parou no 1º Truthy)
 console.log("" || "Nome Padrão"); // "Nome Padrão" ("" é Falsy, pegou o próximo)
 console.log(null || 0 || false); // false (todos Falsy, retorna o último)
 
-//
+// ——————————————————————————————————————
 
 const usuario = { nome: "Mateus" };
 
@@ -45,7 +45,7 @@ console.log(!!usuario); // true (converteu o objeto em boolean true)
 const textoVazio = "";
 console.log(!!textoVazio); // false
 
-//
+// ——————————————————————————————————————
 
 // ❌ CÓDIGO PERIGOSO
 function ListaDeProdutos({ produtos }) {
