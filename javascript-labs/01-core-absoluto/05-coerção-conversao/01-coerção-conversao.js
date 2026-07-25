@@ -1,141 +1,125 @@
-// Exemplo 1: Quantidade de produtos em estoque (0 é um valor válido!)
-const estoqueDisponivel = 0;
-const quantidade = estoqueDisponivel || 10;
-
-console.log(quantidade); // 10 ❌ BUG! Sobrescreveu o estoque 0!
-
-// Exemplo 2: Configuração de notificações ativadas (false é válido!)
-const notificacoesAtivas1 = false;
-const statusFinal1 = notificacoesAtivas1 || true;
-
-console.log(statusFinal1); // true ❌ BUG! Ignorou o false do usuário!
+const input = "42";
+const numero = Number(input); // Explícito!
 
 // ——————————————————————————————————————
 
-// Corrigindo os bugs anteriores com ??:
+const resultado = "O valor é " + 10; // "O valor é 10" (Number virou String automaticamente)
+const subtracao = "20" - 5; // 15 (String virou Number automaticamente)
 
-const estoqueDisponivel2 = 0;
-const quantidade2 = estoqueDisponivel2 ?? 10;
-console.log(quantidade); // 0 ✅ Manteve o número 0!
+// ——————————————————————————————————————
 
-const notificacoesAtivas = false;
-const statusFinal = notificacoesAtivas ?? true;
-console.log(statusFinal); // false ✅ Manteve o booleano false!
+// Comportamentos cruciais de borda:
+Number(null); // 0
+Number(undefined); // NaN
+Number(true); // 1
+Number(false); // 0
 
-// Só usa o fallback se for null ou undefined:
+parseInt("px10"); // NaN (começou com letra, o leitor para na hora)
+parseInt(""); // NaN
+
+// ——————————————————————————————————————
+
+// 1. String() - Construtor Seguro (Funciona com QUALQUER valor)
+String(123); // "123"
+String(null); // "null"
+String(undefined); // "undefined"
+String(true); // "true"
+
+// 2. .toString() - Método de Objeto (Quebra com null ou undefined!)
+(123).toString(); // "123"
+true.toString(); // "true"
+
 const valorNull = null;
-const valorUndefined = undefined;
-
-console.log(valorNull ?? "Padrão"); // "Padrão"
-console.log(valorUndefined ?? "Padrão"); // "Padrão"
+valorNull.toString(); // 💥 TypeError: Cannot read properties of null (reading 'toString')
 
 // ——————————————————————————————————————
 
-const usuario2 = { id: 1 };
+Boolean("Mateus"); // true
+Boolean(""); // false
 
-// Se usuario ou endereco forem null/undefined, retorna undefined sem dar erro!
-const rua = usuario2?.endereco?.rua;
-console.log(rua); // undefined
-
-// Funciona também para Métodos e Arrays!
-const respostaAPI = {
-	dados: null,
-	executar: null,
-};
-
-// Executando método opcional:
-respostaAPI.executar?.(); // Não faz nada e não quebra!
-
-// Acessando índice de array opcional:
-const primeiroItem = respostaAPI.dados?.[0]; // undefined
+// O truque da dupla negação (!!):
+// A primeira negação (!) converte para booleano e inverte o valor.
+// A segunda negação (!) inverte de volta para o sentido correto.
+const temTexto = !!"Texto"; // true
+const estaVazio = !!""; // false
 
 // ——————————————————————————————————————
 
-const usuario = "Mateus";
-const cargo = "Desenvolvedor";
-
-const mensagem = `
-  Olá, ${usuario}!
-  Seu status atual é: ${cargo === "Desenvolvedor" ? "Ativo" : "Inativo"}.
-`;
-
-// ——————————————————————————————————————
-
-function destacar(strings, ...valores) {
-	return strings.reduce((acc, str, i) => {
-		const valor = valores[i] ? `<strong>${valores[i]}</strong>` : "";
-		return `${acc}${str}${valor}`;
-	}, "");
+// ⚠️ Pegadinhas Famosas que SÃO TRUTHY (retornam true num if):
+if ([]) {
+	/* EXECUTADO! Array vazio é TRUTHY */
 }
-
-const nome2 = "Mateus";
-const tecnologia = "React";
-
-// A função 'destacar' é invocada antes da string ser montada
-const html = destacar`O dev ${nome2} domina ${tecnologia}.`;
-
-console.log(html);
-// "O dev <strong>Mateus</strong> domina <strong>React</strong>."
-
-// ——————————————————————————————————————
-
-const pessoa = {
-	nome: "Mateus",
-	idade: 22,
-	redes: { github: "mateussilva" },
-};
-
-// 1. Desestruturação básica
-const { nome, idade } = pessoa;
-
-// 2. Renomeando variáveis (Alias)
-const { nome: nomeCompleto } = pessoa; // 'nome' vira 'nomeCompleto'
-
-// 3. Valores Padrão (Fallback)
-const { tema = "dark" } = pessoa; // Se 'tema' for undefined, assume "dark"
-
-// 4. Desestruturação Aninhada
-const {
-	redes: { github },
-} = pessoa;
-console.log(github); // "mateussilva"
-
-// ——————————————————————————————————————
-
-const coordenadas = [10, 20, 30];
-
-// Extrai pela ordem dos índices
-const [x, y] = coordenadas; // x = 10, y = 20 (30 foi ignorado)
-
-// Pulando elementos
-const [, , z] = coordenadas; // z = 30
-
-// Uso com o Operador Rest (...)
-const [primeiro, ...resto] = [1, 2, 3, 4, 5];
-console.log(primeiro); // 1
-console.log(resto); // [2, 3, 4, 5]
-
-// ——————————————————————————————————————
-
-// Função para extrair dados de perfil de uma API
-function processarPerfilUsuario(respostaAPI) {
-	// Desestrutura com fallback seguro usando ?? e ?.
-	const nome = respostaAPI?.data?.user?.nome ?? "Usuário Anônimo";
-	const avatar = respostaAPI?.data?.user?.midia?.avatar ?? "/default-avatar.png";
-	const tentativas = respostaAPI?.data?.user?.metricas?.tentativas ?? 0;
-
-	return { nome, avatar, tentativas };
+if ({}) {
+	/* EXECUTADO! Objeto vazio é TRUTHY */
+}
+if ("0") {
+	/* EXECUTADO! String com '0' dentro é TRUTHY */
+}
+if ("false") {
+	/* EXECUTADO! String com texto é TRUTHY */
 }
 
 // ——————————————————————————————————————
 
-// ❌ Padrão antigo e propenso a erros (ordem importa!)
-function criarServidor(porta, host, ssl, limiteTimeout) {}
+1 + "2"; // "12" (Number + String -> String + String)
+true + true; // 2    (1 + 1 -> Number)
+true + "5"; // "true5"
 
-// ✅ Padrão moderno (Named Parameters com Destructuring e Fallbacks)
-function criarServidor({ porta = 3000, host = "localhost", ssl = false } = {}) {
-	console.log(`Rodando em http://${host}:${porta} (SSL: ${ssl})`);
+//
+
+"10" - "2"; // 8  (10 - 2)
+"10" * 2; // 20 (10 * 2)
+"10" - "abc"; // NaN ("abc" virou NaN no Number("abc"))
+
+// ——————————————————————————————————————
+
+// ❌ Padrão inseguro (soma de strings)
+function calcularTotal(precoInput, quantidadeInput) {
+	return precoInput * quantidadeInput; // Funciona pela coerção do *, mas se usar + quebra!
 }
 
-// Invocação limpa sem se preocupar com a ordem:
-criarServidor({ porta: 8080 });
+// ✅ Padrão limpo e explícito (Typescript / JS Moderno)
+function calcularTotal(precoInput, quantidadeInput) {
+	const preco = parseFloat(precoInput);
+	const quantidade = parseInt(quantidadeInput, 10);
+
+	// Validação defensive programming usando IsNaN e Truthy check
+	if (Number.isNaN(preco) || Number.isNaN(quantidade)) {
+		throw new Error("Valores numéricos inválidos fornecidos.");
+	}
+
+	return preco * quantidade;
+}
+
+// ——————————————————————————————————————
+
+// ✅ Método 1: A forma mais moderna e limpa (Number.isFinite)
+// Ele garante que é do tipo number, NÃO é NaN e NÃO é Infinity
+Number.isFinite(42); // true
+Number.isFinite("42"); // false (string não passa)
+Number.isFinite(NaN); // false
+
+// ✅ Método 2: Manual com typeof
+function ehNumeroValido(valor) {
+	return typeof valor === "number" && !Number.isNaN(valor);
+}
+
+// ——————————————————————————————————————
+
+// ✅ RETORNAM TRUE (São números finitos válidos):
+Number.isFinite(42); // true
+Number.isFinite(3.14); // true
+Number.isFinite(-10); // true
+Number.isFinite(0); // true
+
+// ❌ RETORNAM FALSE (Não são números finitos válidos):
+Number.isFinite(NaN); // false
+Number.isFinite(Infinity); // false
+Number.isFinite(-Infinity); // false
+
+// ❌ RETORNAM FALSE (Não são do tipo Number — NÃO faz conversão automática!):
+Number.isFinite("42"); // false (É uma String!)
+Number.isFinite("abc"); // false
+Number.isFinite(null); // false
+Number.isFinite(undefined); // false
+Number.isFinite(true); // false
