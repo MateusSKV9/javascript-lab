@@ -5,7 +5,7 @@ function processarPedido() {
 	let status = "pago"; // Escopo de Função
 }
 
-console.log(pedidoId); // ReferenceError: pedidoId is not defined
+// console.log(pedidoId); // ReferenceError: pedidoId is not defined
 
 // ——————————————————————————————————————
 
@@ -15,7 +15,7 @@ if (true) {
 }
 
 console.log(vazou); // "Vazo para fora do bloco"
-console.log(protegido); // ReferenceError: protegido is not defined
+// console.log(protegido); // ReferenceError: protegido is not defined
 
 // ——————————————————————————————————————
 
